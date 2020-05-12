@@ -18,5 +18,4 @@ class Constants(PathInfo):
     GVKEY = 'gvkey'
     CIK = 'cik'
 
-
     SIC_CODE = 'sic'
