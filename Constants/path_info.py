@@ -13,7 +13,7 @@ class PathInfo(object):
 
     DATA_PATH = os.path.join(ROOT_PATH, 'data')
     TEMP_PATH = os.path.join(ROOT_PATH, 'temp')
-    RESULT_PATH = os.path.join(ROOT_PATH, 'result')
+    RESULT_PATH = os.path.join(ROOT_PATH, 'output')
 
     PRE_ROOT_PATH = '/home/zigan/Documents/wangyouan/research/PoliticalConnections'
     PRE_DATA_PATH = os.path.join(PRE_ROOT_PATH, 'data')

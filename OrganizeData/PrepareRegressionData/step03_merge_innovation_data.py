@@ -14,21 +14,23 @@ import os
 
 import pandas as pd
 from pandas import DataFrame
+from scipy.stats.mstats import winsorize
 
 from Constants import Constants as const
 
 if __name__ == '__main__':
     ddcg_df: DataFrame = pd.read_pickle(os.path.join(const.TEMP_PATH, '20200515_democracy_with_ctrl.pkl'))
-    po_innovation_df: DataFrame = pd.read_pickle(
-        os.path.join(const.DATA_PATH, 'innovation', '20191016_worldscope_po_innovation_data.pkl'))
-    us_citation_df: DataFrame = pd.read_pickle(os.path.join(const.DATA_PATH, 'innovation', 'us_citation.pkl'))
-    us_patent_df: DataFrame = pd.read_pickle(os.path.join(const.DATA_PATH, 'innovation', 'us_patent.pkl'))
-    ctat_global_df: DataFrame = pd.read_csv(
-        os.path.join(const.DATABASE_PATH, 'Compustat', '198706_202003_global_compustat_all_firms.zip'),
-        dtype={'gvkey': str}, usecols=[const.GVKEY, 'fyear', 'isin']).rename(
-        columns={'fyear': const.YEAR}).drop_duplicates(subset=[const.GVKEY, const.YEAR], keep='last')
-    ddcg_df_isin: DataFrame = ddcg_df.merge(ctat_global_df, on=[const.GVKEY, const.YEAR], how='left')
-    ddcg_df_patent: DataFrame = ddcg_df_isin.merge(us_patent_df, on=[const.GVKEY, const.YEAR], how='left')
-    ddcg_df_patent_1: DataFrame = ddcg_df_patent.merge(us_patent_df, on=[const.GVKEY, const.YEAR], how='left',
-                                                       suffixes=['', '_1'])
-    
+    innovation_df: DataFrame = pd.read_pickle(
+        os.path.join(const.TEMP_PATH, '20200522_innovation_related_variables.pkl'))
+    for key in ['R_D_LN', 'R_D_RATIO', 'cite_us_ln', 'patent_us_ln', 'patent_home_ln', 'cite_home_ln']:
+        innovation_df.loc[innovation_df[key].notnull(), '{}_win'.format(key)] = winsorize(innovation_df[key].dropna(),
+                                                                                          limits=(0.01, 0.01))
+
+    ddcg_df2: DataFrame = ddcg_df.merge(innovation_df.drop(['isin', 'sedol'], axis=1), on=[const.GVKEY, const.YEAR],
+                                        how='left')
+    innovation_df.loc[:, const.YEAR] -= 1
+    ddcg_df3: DataFrame = ddcg_df2.merge(innovation_df.drop(['isin', 'sedol'], axis=1), on=[const.GVKEY, const.YEAR],
+                                         how='left', suffixes=['', '_1'])
+    ddcg_df3.to_pickle(os.path.join(const.TEMP_PATH, '20200522_democracy_innovation_preliminary_reg_data.pkl'))
+    ddcg_df3.to_stata(os.path.join(const.RESULT_PATH, '20200522_democracy_innovation_preliminary_reg_data.dta'),
+                      write_index=False)
