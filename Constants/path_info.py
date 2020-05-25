@@ -9,7 +9,7 @@
 import os
 
 class PathInfo(object):
-    ROOT_PATH = '/home/zigan/Documents/wangyouan/research/DemocraryInvestment'
+    ROOT_PATH = '/home/zigan/Documents/wangyouan/research/DemocracyInvestment'
 
     DATA_PATH = os.path.join(ROOT_PATH, 'data')
     TEMP_PATH = os.path.join(ROOT_PATH, 'temp')
