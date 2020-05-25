@@ -41,13 +41,9 @@ if __name__ == '__main__':
                  'gen1sum_isin_app': 'generality', 'ori1sum_isin_app': 'originality'})
 
     # Append US citation information
-    us_citation_df: DataFrame = pd.read_pickle(os.path.join(const.DATA_PATH, 'innovation', 'us_citation.pkl'))
-    us_citation_df_count = us_citation_df.groupby([const.GVKEY, const.YEAR])['patnum'].count()
-    us_citation_df_cite = us_citation_df.groupby([const.GVKEY, const.YEAR])['cite_all'].sum()
-    us_citation_df2 = us_citation_df_count.to_frame().merge(us_citation_df_cite, left_index=True,
-                                                            right_index=True).reset_index(drop=False).rename(
+    us_citation_df: DataFrame = pd.read_pickle(os.path.join(const.DATA_PATH, 'innovation', 'us_citation.pkl')).rename(
         columns={'patnum': 'patent_us'})
-    data_df2: DataFrame = data_df.merge(us_citation_df2, how='left', on=['gvkey', 'year'])
+    data_df2: DataFrame = data_df.merge(us_citation_df, how='left', on=['gvkey', 'year'])
     data_df2.loc[:, 'patent_us_ln'] = np.log(data_df2['patent_us']).replace([np.inf, -np.inf], np.nan)
     data_df2.loc[:, 'cite_us_ln'] = np.log(data_df2['cite_all']).replace([np.inf, -np.inf], np.nan)
 
@@ -71,4 +67,4 @@ if __name__ == '__main__':
 
     data_df4: DataFrame = data_df3.merge(ctat_df.loc[:, [const.GVKEY, const.YEAR, 'R_D_LN', 'lag_at', 'R_D_RATIO']],
                                          on=[const.GVKEY, const.YEAR], how='outer')
-    data_df4.to_pickle(os.path.join(const.TEMP_PATH, '20200522_innovation_related_variables.pkl'))
+    data_df4.to_pickle(os.path.join(const.TEMP_PATH, '20200525_innovation_related_variables.pkl'))

@@ -45,11 +45,11 @@ if __name__ == '__main__':
                                                                                           limits=(0.01, 0.01))
 
     reg_df: DataFrame = pd.read_pickle(
-        os.path.join(const.TEMP_PATH, '20200522_democracy_innovation_preliminary_reg_data.pkl'))
+        os.path.join(const.TEMP_PATH, '20200525_democracy_innovation_preliminary_reg_data.pkl'))
 
-    reg_df_2: DataFrame = reg_df.merge(ctat_df, on=[const.GVKEY, const.YEAR], how='left')
+    reg_df_2: DataFrame = reg_df.merge(ctat_df_valid, on=[const.GVKEY, const.YEAR], how='left')
     ctat_df.loc[:, const.YEAR] -= 1
-    reg_df_3: DataFrame = reg_df_2.merge(ctat_df, on=[const.GVKEY, const.YEAR], how='left', suffixes=['', '_1'])
+    reg_df_3: DataFrame = reg_df_2.merge(ctat_df_valid, on=[const.GVKEY, const.YEAR], how='left', suffixes=['', '_1'])
     reg_df_3.to_pickle(os.path.join(const.TEMP_PATH, '20200525_democracy_investment_regression_data.pkl'))
-    reg_df_3.to_stata(os.path.join(const.TEMP_PATH, '20200525_democracy_investment_regression_data.dta'),
+    reg_df_3.to_stata(os.path.join(const.RESULT_PATH, '20200525_democracy_investment_regression_data.dta'),
                       write_index=False)

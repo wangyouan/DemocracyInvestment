@@ -31,6 +31,6 @@ if __name__ == '__main__':
     innovation_df.loc[:, const.YEAR] -= 1
     ddcg_df3: DataFrame = ddcg_df2.merge(innovation_df.drop(['isin', 'sedol'], axis=1), on=[const.GVKEY, const.YEAR],
                                          how='left', suffixes=['', '_1'])
-    ddcg_df3.to_pickle(os.path.join(const.TEMP_PATH, '20200522_democracy_innovation_preliminary_reg_data.pkl'))
-    ddcg_df3.to_stata(os.path.join(const.RESULT_PATH, '20200522_democracy_innovation_preliminary_reg_data.dta'),
-                      write_index=False)
+    ddcg_df3.to_pickle(os.path.join(const.TEMP_PATH, '20200525_democracy_innovation_preliminary_reg_data.pkl'))
+    # ddcg_df3.to_stata(os.path.join(const.RESULT_PATH, '20200525_democracy_innovation_preliminary_reg_data.dta'),
+    #                   write_index=False)
