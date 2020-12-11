@@ -62,4 +62,4 @@ class Constants(PathInfo):
                                     'SRI': 'LKA', 'SUD': 'SDN', 'SWA': 'SWZ', 'SWD': 'SWE', 'TAJ': 'TJK', 'TAW': 'TWN',
                                     'TAZ': 'TZA', 'THI': 'THA', 'TOG': 'TGO', 'TRI': 'TTO', 'UAE': 'ARE',
                                     'UKG': 'GBR', 'URU': 'URY', 'USR': 'SUN', 'VIE': 'VNM', 'YAR': 'YEM', 'YGS': 'SCG',
-                                    'YPR': 'YMD', 'YUG': 'YUG', 'ZAI': 'COD', 'ZAM': 'ZMB', 'ZIM': 'ZWE', }
+                                    'YPR': 'YMD', 'YUG': 'SRB', 'ZAI': 'COD', 'ZAM': 'ZMB', 'ZIM': 'ZWE', }
