@@ -18,16 +18,16 @@ from pandas import DataFrame
 from Constants import Constants as const
 
 if __name__ == '__main__':
-    ws_df: DataFrame = pd.read_pickle(os.path.join(const.DATA_PATH, 'worldscope_firm_characteristic.pkl'))
+    # Load Freedom House data and Polity IV data
     fh_df: DataFrame = pd.read_pickle(
         os.path.join(const.TEMP_PATH, '20201210_fh_rankings_1973_2018.pkl')).drop_duplicates(
-        subset=['scode', 'year'], keep='first').rename(columns={'scode': 'country_iso3'}).replace(const.SCODE2ISO_DICT)
+        subset=['scode', 'year'], keep='first').rename(columns={'scode': 'country_iso3'})
     fh_df.loc[:, 'DEMOC_FREE_HOUSE'] = fh_df['status'].apply(lambda x: int(x in {'PF', 'F', 'PF ', 'F '}))
     p5_df: DataFrame = pd.read_pickle(os.path.join(const.TEMP_PATH, '20201210_p5_v2018.pkl')).drop_duplicates(
         subset=['scode', 'year'], keep='first').rename(columns={'scode': 'country_iso3', 'democ': 'DEMOC_POLITY_IV',
                                                                 'autoc': 'AUTOC_POLITY_IV', 'xrcomp': 'COMP_EXEC_RCT',
                                                                 'xropen': 'OPEN_EXEC_RCT', 'xconst': 'CONS_EXEC',
-                                                                'parcomp': 'COMP_PAR'}).replace(const.SCODE2ISO_DICT)
+                                                                'parcomp': 'COMP_PAR'})
 
     # Load Data (BMR)
     bmr_df = pd.read_csv(os.path.join(const.DATA_PATH, 'democracy_BMR.csv'),
@@ -47,6 +47,26 @@ if __name__ == '__main__':
     democracy_df: DataFrame = fh_df.loc[:, ['country_iso3', const.YEAR, 'DEMOC_FREE_HOUSE']].merge(
         p5_df.loc[:, ['country_iso3', const.YEAR, 'DEMOC_POLITY_IV', 'AUTOC_POLITY_IV', 'COMP_EXEC_RCT',
                       'OPEN_EXEC_RCT', 'CONS_EXEC', 'COMP_PAR']], on=['country_iso3', const.YEAR], how='left').merge(
-        bmr_df, on=['country_iso3', const.YEAR], how='left').merge(cgv_df, on=['country_iso3', const.YEAR])
+        bmr_df, on=['country_iso3', const.YEAR], how='left').merge(cgv_df, on=['country_iso3', const.YEAR], how='left')
 
     democracy_df.to_pickle(os.path.join(const.TEMP_PATH, '20201211_merged_democracy_measures.pkl'))
+
+    # get ws country coverage
+    ws_df: DataFrame = pd.read_pickle(os.path.join(const.DATA_PATH, 'worldscope_firm_characteristic.pkl'))
+    ws_country_df: DataFrame = ws_df.loc[:, ['country_iso3', const.YEAR]].drop_duplicates()
+    ws_country_df.loc[:, 'ws_data'] = 1
+    ws_demo_df: DataFrame = ws_country_df.merge(democracy_df, on=[const.YEAR, 'country_iso3'], how='left')
+
+    # check country list information
+    # ['VIR', 'VGB', 'TWN', 'SVN', 'PSE', 'PRI', 'CYM', 'JEY', 'IMN', 'HKG', 'GIB', 'GGY', 'FRO', 'FLK', 'CUW', 'COK',
+    # 'BMU', 'AIA']
+    country_list = list()
+    for i in ws_demo_df.country_iso3.unique():
+        country_df = ws_demo_df.loc[ws_demo_df['country_iso3'] == i].copy()
+        if country_df.loc[~country_df['DEMOC_FREE_HOUSE'].isnull()].empty:
+            country_list.append(i)
+    pd.to_pickle(country_list, os.path.join(const.TEMP_PATH, '20201211_country_invalid_information.pkl'))
+
+    ws_demo_valid_df: DataFrame = ws_demo_df.loc[~ws_demo_df['country_iso3'].isin(country_list)].copy()
+
+    ws_demo_valid_df.to_pickle(os.path.join(const.TEMP_PATH, '20201211_worldscope_add_democracy_data.pkl'))
