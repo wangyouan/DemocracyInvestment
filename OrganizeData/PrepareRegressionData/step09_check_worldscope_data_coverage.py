@@ -35,6 +35,7 @@ if __name__ == '__main__':
                                                     'NIR': 'NER', 'NEW': 'NZL', 'NTH': 'NLD', 'MOR': 'MAR',
                                                     'MON': 'MNG', 'MAS': 'MUS', 'MAL': 'MYS', 'MAW': 'MWI',
                                                     'MAG': 'MDG', 'MAC': 'MKD', })
+    fh_df.to_pickle(os.path.join(const.TEMP_PATH, '20201210_fh_rankings_1973_2018.pkl'))
     fh_country_group: DataFrame = fh_df.loc[:, ['scode', 'year', 'country']].groupby(['scode', 'country'])
     fh_start_year = fh_country_group['year'].min()
     fh_end_year = fh_country_group['year'].max()
@@ -57,6 +58,8 @@ if __name__ == '__main__':
                                                     'NIG': 'NGA', 'NIR': 'NER', 'NEW': 'NZL', 'NTH': 'NLD',
                                                     'MOR': 'MAR', 'MON': 'MNG', 'MAS': 'MUS', 'MAL': 'MYS',
                                                     'MAW': 'MWI', 'MAG': 'MDG', 'MAC': 'MKD', })
+    p5_df.to_pickle(os.path.join(const.TEMP_PATH, '20201210_p5_v2018.pkl'))
+
     p5_country_group: DataFrame = p5_df.loc[:, ['scode', 'year', 'country']].groupby(['scode', 'country'])
     p5_start_year = p5_country_group['year'].min()
     p5_end_year = p5_country_group['year'].max()
