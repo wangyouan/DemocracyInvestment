@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# @Filename: step08_check_worldscope_data_coverage
+# @Filename: step09_check_worldscope_data_coverage
 # @Date: 2020/12/10
 # @Author: Mark Wang
 # @Email: wangyouan@gamil.com
 
 import os
 
-import numpy as np
 import pandas as pd
 from pandas import DataFrame
-from scipy.stats.mstats import winsorize
 
 from Constants import Constants as const
 
@@ -45,4 +43,4 @@ if __name__ == '__main__':
     wc_df_coverage: DataFrame = pd.read_pickle(os.path.join(const.DATA_PATH, 'worldscope_data_country_coverage.pkl'))
     merged_df: DataFrame = wc_df_coverage.merge(p5_fh_combined_df, left_on=['country_iso3'], right_on=['scode'],
                                                 how='left')
-merged_df.to_excel(os.path.join(const.RESULT_PATH, '20201210_worldscope_country_data_coverage.xlsx'), index=False)
+    merged_df.to_excel(os.path.join(const.RESULT_PATH, '20201210_worldscope_country_data_coverage.xlsx'), index=False)
