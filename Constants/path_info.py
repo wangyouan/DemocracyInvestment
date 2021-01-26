@@ -8,6 +8,7 @@
 
 import os
 
+
 class PathInfo(object):
     ROOT_PATH = '/home/zigan/Documents/wangyouan/research/DemocracyInvestment'
 
@@ -25,3 +26,4 @@ class PathInfo(object):
     STATA_CODE_PATH = os.path.join(STATA_PATH, 'code')
 
     DATABASE_PATH = '/home/zigan/Documents/wangyouan/database'
+    DM_DATA_PATH = '/home/zigan/Documents/wangyouan/research/DataMining/DataMiningHDFE/Project/DemocracyInvestment/Data'
